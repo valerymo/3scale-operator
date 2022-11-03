@@ -433,6 +433,10 @@ func (s *SystemOptionsProvider) setFileStorageOptions() {
 		s.apimanager.Spec.System.FileStorageSpec.S3 != nil {
 		s.options.S3FileStorageOptions = &component.S3FileStorageOptions{
 			ConfigurationSecretName: s.apimanager.Spec.System.FileStorageSpec.S3.ConfigurationSecretRef.Name,
+			S3STSEnabled:            false, //default value when S3STSEnabled is not set in the CR
+		}
+		if s.apimanager.Spec.System.FileStorageSpec.S3.S3STSEnabled != nil {
+			s.options.S3FileStorageOptions.S3STSEnabled = *s.apimanager.Spec.System.FileStorageSpec.S3.S3STSEnabled
 		}
 	} else {
 		// default to PVC

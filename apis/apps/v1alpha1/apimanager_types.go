@@ -505,6 +505,7 @@ type DeprecatedSystemS3Spec struct {
 
 type SystemS3Spec struct {
 	ConfigurationSecretRef v1.LocalObjectReference `json:"configurationSecretRef"`
+	S3STSEnabled           *bool                   `json:"sts,omitempty"`
 }
 
 type SystemDatabaseSpec struct {

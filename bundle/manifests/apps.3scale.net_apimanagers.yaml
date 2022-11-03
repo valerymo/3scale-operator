@@ -5162,6 +5162,8 @@ spec:
                                 type: string
                             type: object
                             x-kubernetes-map-type: atomic
+                          sts:
+                            type: boolean
                         required:
                         - configurationSecretRef
                         type: object

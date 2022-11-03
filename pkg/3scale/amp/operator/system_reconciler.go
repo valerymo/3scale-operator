@@ -31,7 +31,7 @@ func NewSystemReconciler(baseAPIManagerLogicReconciler *BaseAPIManagerLogicRecon
 func (r *SystemReconciler) reconcileFileStorage(system *component.System) error {
 	if r.apiManager.Spec.System.FileStorageSpec != nil {
 		if r.apiManager.Spec.System.FileStorageSpec.S3 != nil {
-			return r.validateS3StorageProvidedConfiguration()
+			return r.validateS3StorageProvidedConfiguration(system)
 		}
 		if r.apiManager.Spec.System.FileStorageSpec.DeprecatedS3 != nil {
 			r.Logger().Info("Warning: deprecated amazonSimpleStorageService field in CR being used. Ignoring it... Please use simpleStorageService")
@@ -231,7 +231,7 @@ func (r *SystemReconciler) Reconcile() (reconcile.Result, error) {
 	return reconcile.Result{}, nil
 }
 
-func (r *SystemReconciler) validateS3StorageProvidedConfiguration() error {
+func (r *SystemReconciler) validateS3StorageProvidedConfiguration(system *component.System) error {
 	// Nothing for reconcile.
 	// Check all required fields exist
 	awsCredentialsSecretName := r.apiManager.Spec.System.FileStorageSpec.S3.ConfigurationSecretRef.Name
@@ -246,14 +246,24 @@ func (r *SystemReconciler) validateS3StorageProvidedConfiguration() error {
 
 	secretData := awsSecret.Data
 	var result *string
-	result = helper.GetSecretDataValue(secretData, component.AwsAccessKeyID)
-	if result == nil {
-		return fmt.Errorf("Secret field '%s' is required in secret '%s'", component.AwsAccessKeyID, awsCredentialsSecretName)
-	}
-
-	result = helper.GetSecretDataValue(secretData, component.AwsSecretAccessKey)
-	if result == nil {
-		return fmt.Errorf("Secret field '%s' is required in secret '%s'", component.AwsSecretAccessKey, awsCredentialsSecretName)
+	if system.Options.S3FileStorageOptions.S3STSEnabled {
+		result = helper.GetSecretDataValue(secretData, component.AwsRoleArn)
+		if result == nil {
+			return fmt.Errorf("Secret field '%s' is required in secret '%s'", component.AwsRoleArn, awsCredentialsSecretName)
+		}
+		result = helper.GetSecretDataValue(secretData, component.AwsWebIdentityTokenFile)
+		if result == nil {
+			return fmt.Errorf("Secret field '%s' is required in secret '%s'", component.AwsWebIdentityTokenFile, awsCredentialsSecretName)
+		}
+	} else {
+		result = helper.GetSecretDataValue(secretData, component.AwsAccessKeyID)
+		if result == nil {
+			return fmt.Errorf("Secret field '%s' is required in secret '%s'", component.AwsAccessKeyID, awsCredentialsSecretName)
+		}
+		result = helper.GetSecretDataValue(secretData, component.AwsSecretAccessKey)
+		if result == nil {
+			return fmt.Errorf("Secret field '%s' is required in secret '%s'", component.AwsSecretAccessKey, awsCredentialsSecretName)
+		}
 	}
 
 	result = helper.GetSecretDataValue(secretData, component.AwsBucket)
