@@ -530,7 +530,7 @@ func (system *System) appPodVolumes() []v1.Volume {
 					Sources: []v1.VolumeProjection{
 						v1.VolumeProjection{
 							ServiceAccountToken: &v1.ServiceAccountTokenProjection{
-								Audience:          S3StsCredentialsProjectedVolumeMountPath,
+								Audience:          "openshift",
 								ExpirationSeconds: &[]int64{3600}[0],
 								Path:              "token",
 							},
@@ -820,7 +820,7 @@ func (system *System) SidekiqPodVolumes() []v1.Volume {
 					Sources: []v1.VolumeProjection{
 						v1.VolumeProjection{
 							ServiceAccountToken: &v1.ServiceAccountTokenProjection{
-								Audience:          S3StsCredentialsProjectedVolumeMountPath,
+								Audience:          "openshift",
 								ExpirationSeconds: &[]int64{3600}[0],
 								Path:              "token",
 							},
