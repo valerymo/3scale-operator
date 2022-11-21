@@ -932,7 +932,7 @@ func (system *System) s3CredsProjectedVolumeMount() v1.VolumeMount {
 	return v1.VolumeMount{
 		Name:      S3StsCredentialsSecretName,
 		ReadOnly:  true,
-		MountPath: S3StsCredentialsProjectedVolumeMountPath,
+		MountPath: system.Options.MountPath,
 	}
 }
 

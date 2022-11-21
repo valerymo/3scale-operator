@@ -249,31 +249,32 @@ func (r *SystemReconciler) validateS3StorageProvidedConfiguration(system *compon
 	if system.Options.S3FileStorageOptions.S3STSEnabled {
 		result = helper.GetSecretDataValue(secretData, component.AwsRoleArn)
 		if result == nil {
-			return fmt.Errorf("Secret field '%s' is required in secret '%s'", component.AwsRoleArn, awsCredentialsSecretName)
+			return fmt.Errorf("secret field '%s' is required in secret '%s'", component.AwsRoleArn, awsCredentialsSecretName)
 		}
-		result = helper.GetSecretDataValue(secretData, component.AwsWebIdentityTokenFile)
-		if result == nil {
-			return fmt.Errorf("Secret field '%s' is required in secret '%s'", component.AwsWebIdentityTokenFile, awsCredentialsSecretName)
+		tokenPath := helper.GetSecretDataValue(secretData, component.AwsWebIdentityTokenFile)
+		if tokenPath == nil {
+			return fmt.Errorf("secret field '%s' is required in secret '%s'", component.AwsWebIdentityTokenFile, awsCredentialsSecretName)
 		}
+		system.Options.MountPath = *tokenPath
 	} else {
 		result = helper.GetSecretDataValue(secretData, component.AwsAccessKeyID)
 		if result == nil {
-			return fmt.Errorf("Secret field '%s' is required in secret '%s'", component.AwsAccessKeyID, awsCredentialsSecretName)
+			return fmt.Errorf("secret field '%s' is required in secret '%s'", component.AwsAccessKeyID, awsCredentialsSecretName)
 		}
 		result = helper.GetSecretDataValue(secretData, component.AwsSecretAccessKey)
 		if result == nil {
-			return fmt.Errorf("Secret field '%s' is required in secret '%s'", component.AwsSecretAccessKey, awsCredentialsSecretName)
+			return fmt.Errorf("secret field '%s' is required in secret '%s'", component.AwsSecretAccessKey, awsCredentialsSecretName)
 		}
 	}
 
 	result = helper.GetSecretDataValue(secretData, component.AwsBucket)
 	if result == nil {
-		return fmt.Errorf("Secret field '%s' is required in secret '%s'", component.AwsBucket, awsCredentialsSecretName)
+		return fmt.Errorf("secret field '%s' is required in secret '%s'", component.AwsBucket, awsCredentialsSecretName)
 	}
 
 	result = helper.GetSecretDataValue(secretData, component.AwsRegion)
 	if result == nil {
-		return fmt.Errorf("Secret field '%s' is required in secret '%s'", component.AwsRegion, awsCredentialsSecretName)
+		return fmt.Errorf("secret field '%s' is required in secret '%s'", component.AwsRegion, awsCredentialsSecretName)
 	}
 
 	return nil

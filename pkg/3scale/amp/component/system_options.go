@@ -60,6 +60,7 @@ type SystemOptions struct {
 
 	S3FileStorageOptions  *S3FileStorageOptions  `validate:"required_without=PvcFileStorageOptions"`
 	PvcFileStorageOptions *PVCFileStorageOptions `validate:"required_without=S3FileStorageOptions"`
+	MountPath             string
 
 	AppReplicas     int32
 	SidekiqReplicas int32
