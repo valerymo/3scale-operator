@@ -23,7 +23,6 @@
 * [3scale installation Backup and Restore using the operator (in *TechPreview*)](operator-backup-and-restore.md)
 * [Application Capabilities (in *TechPreview*)](operator-application-capabilities.md)
 * [APIManager CRD reference](apimanager-reference.md)
-* [AWS STS Support](#aws-sts-support)
     * CR samples [\[1\]](../config/samples/apps_v1alpha1_apimanager_simple.yaml) [\[2\]](cr_samples/apimanager/)
 
 ## Installing 3scale
@@ -369,24 +368,6 @@ AWS_REGION                  |Y|Y|
 AWS_HOSTNAME                |N|N|
 AWS_PROTOCOL                |N|N|
 AWS_PATH_STYLE              |N|N|
-
-
-
-**SystemApp Environment Variables**  
-The 3scale operator will pass the following env vars depending on the type of the s3 secret
-
-|ENV variable              |IAM|STS|
-|--------------------------|---|---|
-AWS_ACCESS_KEY_ID          |Y|N|
-AWS_SECRET_ACCESS_KEY      |Y|N|
-AWS_ROLE_ARN               |N|Y|
-AWS_WEB_IDENTITY_TOKEN_FILE|N|Y|
-AWS_BUCKET                 |Y|Y|
-AWS_REGION                 |Y|Y|
-AWS_HOSTNAME               |Y|Y|
-AWS_PROTOCOL               |Y|Y|
-AWS_PATH_STYLE             |Y|Y|
-FILE_UPLOAD_STORAGE        |Y|Y|
 
 **In case of STS - the operator will add a projected volume to request the token**  
 Following pods will have projected volume in case of STS:
@@ -823,4 +804,3 @@ automatically upgrades the running instance of the operator without human interv
 If you selected *Manual updates*, when a newer version of the Operator is available,
 the OLM creates an update request. As a cluster administrator, you must then manually approve
 that update request to have the Operator updated to the new version.
-
