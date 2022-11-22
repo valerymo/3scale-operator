@@ -402,7 +402,7 @@ spec:
 ```
 
 **ApiManager**  
-ApiManager CR contains **STS** boolean field.  
+ApiManager CR contains **STS** object field.
 Operator will configure deployments according to this definition.  
 Below is example for ApiManager CR
 ```yaml
@@ -417,10 +417,13 @@ spec:
       simpleStorageService:
         configurationSecretRef:
           name: s3-credentials
-        sts: true
+        sts:
+          enabled: true
+          audience: openshift
 ...
   wildcardDomain: <wildcardDomain>
 ```
+Users are allowed to define their own **audience** if necessary; the default value is openshift.
 
 _Reference to STS configured cluster pre-requisite:_
 - https://docs.openshift.com/container-platform/4.11/authentication/managing_cloud_provider_credentials/cco-mode-sts.html

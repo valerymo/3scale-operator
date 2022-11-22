@@ -9468,7 +9468,12 @@ spec:
                             type: object
                             x-kubernetes-map-type: atomic
                           sts:
-                            type: boolean
+                            properties:
+                              audience:
+                                type: string
+                              enabled:
+                                type: boolean
+                            type: object
                         required:
                         - configurationSecretRef
                         type: object
