@@ -435,8 +435,13 @@ func (s *SystemOptionsProvider) setFileStorageOptions() {
 			ConfigurationSecretName: s.apimanager.Spec.System.FileStorageSpec.S3.ConfigurationSecretRef.Name,
 			S3STSEnabled:            false, //default value when S3STSEnabled is not set in the CR
 		}
-		if s.apimanager.Spec.System.FileStorageSpec.S3.S3STSEnabled != nil {
-			s.options.S3FileStorageOptions.S3STSEnabled = *s.apimanager.Spec.System.FileStorageSpec.S3.S3STSEnabled
+		if s.apimanager.Spec.System.FileStorageSpec.S3.STS.Enabled != nil {
+			s.options.S3FileStorageOptions.S3STSEnabled = *s.apimanager.Spec.System.FileStorageSpec.S3.STS.Enabled
+			if s.apimanager.Spec.System.FileStorageSpec.S3.STS.Audience != "" {
+				s.options.S3FileStorageOptions.Audience = s.apimanager.Spec.System.FileStorageSpec.S3.STS.Audience
+			} else {
+				s.options.S3FileStorageOptions.Audience = "openshift"
+			}
 		}
 	} else {
 		// default to PVC

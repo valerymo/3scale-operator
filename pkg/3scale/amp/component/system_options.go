@@ -25,6 +25,7 @@ type S3FileStorageOptions struct {
 	ConfigurationSecretName string `validate:"required"`
 	S3STSEnabled            bool
 	TokenPath               string
+	Audience                string
 }
 
 type SystemSMTPSecretOptions struct {

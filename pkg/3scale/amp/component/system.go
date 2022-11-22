@@ -529,7 +529,7 @@ func (system *System) appPodVolumes() []v1.Volume {
 					Sources: []v1.VolumeProjection{
 						v1.VolumeProjection{
 							ServiceAccountToken: &v1.ServiceAccountTokenProjection{
-								Audience:          "openshift",
+								Audience:          system.Options.S3FileStorageOptions.Audience,
 								ExpirationSeconds: &[]int64{3600}[0],
 								Path:              filepath.Base(system.Options.S3FileStorageOptions.TokenPath),
 							},
@@ -819,7 +819,7 @@ func (system *System) SidekiqPodVolumes() []v1.Volume {
 					Sources: []v1.VolumeProjection{
 						v1.VolumeProjection{
 							ServiceAccountToken: &v1.ServiceAccountTokenProjection{
-								Audience:          "openshift",
+								Audience:          system.Options.S3FileStorageOptions.Audience,
 								ExpirationSeconds: &[]int64{3600}[0],
 								Path:              filepath.Base(system.Options.S3FileStorageOptions.TokenPath),
 							},
