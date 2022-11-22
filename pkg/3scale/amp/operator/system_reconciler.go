@@ -255,7 +255,7 @@ func (r *SystemReconciler) validateS3StorageProvidedConfiguration(system *compon
 		if tokenPath == nil {
 			return fmt.Errorf("secret field '%s' is required in secret '%s'", component.AwsWebIdentityTokenFile, awsCredentialsSecretName)
 		}
-		system.Options.MountPath = *tokenPath
+		system.Options.S3FileStorageOptions.TokenPath = *tokenPath
 	} else {
 		result = helper.GetSecretDataValue(secretData, component.AwsAccessKeyID)
 		if result == nil {

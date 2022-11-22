@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"sort"
 	"strconv"
+	"strings"
 
 	policyv1 "k8s.io/api/policy/v1"
 
@@ -112,8 +113,8 @@ const (
 )
 
 const (
-	S3StsCredentialsSecretName               = "s3-credentials"
-	S3StsCredentialsProjectedVolumeMountPath = "/var/run/secrets/openshift/serviceaccount"
+	S3StsCredentialsSecretName = "s3-credentials"
+	TokenName                  = "token"
 )
 
 type System struct {
@@ -929,10 +930,11 @@ func (system *System) systemConfigVolumeMount() v1.VolumeMount {
 }
 
 func (system *System) s3CredsProjectedVolumeMount() v1.VolumeMount {
+	tokenMountPath := strings.TrimSuffix(system.Options.S3FileStorageOptions.TokenPath, TokenName)
 	return v1.VolumeMount{
 		Name:      S3StsCredentialsSecretName,
 		ReadOnly:  true,
-		MountPath: system.Options.MountPath,
+		MountPath: tokenMountPath,
 	}
 }
 
