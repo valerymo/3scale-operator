@@ -2,11 +2,10 @@ package component
 
 import (
 	"fmt"
+	policyv1 "k8s.io/api/policy/v1"
+	"path/filepath"
 	"sort"
 	"strconv"
-	"strings"
-
-	policyv1 "k8s.io/api/policy/v1"
 
 	"github.com/3scale/3scale-operator/pkg/helper"
 	appsv1 "github.com/openshift/api/apps/v1"
@@ -114,7 +113,6 @@ const (
 
 const (
 	S3StsCredentialsSecretName = "s3-credentials"
-	TokenName                  = "token"
 )
 
 type System struct {
@@ -533,7 +531,7 @@ func (system *System) appPodVolumes() []v1.Volume {
 							ServiceAccountToken: &v1.ServiceAccountTokenProjection{
 								Audience:          "openshift",
 								ExpirationSeconds: &[]int64{3600}[0],
-								Path:              TokenName,
+								Path:              filepath.Base(system.Options.S3FileStorageOptions.TokenPath),
 							},
 						},
 					},
@@ -823,7 +821,7 @@ func (system *System) SidekiqPodVolumes() []v1.Volume {
 							ServiceAccountToken: &v1.ServiceAccountTokenProjection{
 								Audience:          "openshift",
 								ExpirationSeconds: &[]int64{3600}[0],
-								Path:              TokenName,
+								Path:              filepath.Base(system.Options.S3FileStorageOptions.TokenPath),
 							},
 						},
 					},
@@ -930,7 +928,7 @@ func (system *System) systemConfigVolumeMount() v1.VolumeMount {
 }
 
 func (system *System) s3CredsProjectedVolumeMount() v1.VolumeMount {
-	tokenMountPath := strings.TrimSuffix(system.Options.S3FileStorageOptions.TokenPath, TokenName)
+	tokenMountPath := filepath.Dir(system.Options.S3FileStorageOptions.TokenPath)
 	return v1.VolumeMount{
 		Name:      S3StsCredentialsSecretName,
 		ReadOnly:  true,
