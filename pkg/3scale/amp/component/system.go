@@ -533,7 +533,7 @@ func (system *System) appPodVolumes() []v1.Volume {
 							ServiceAccountToken: &v1.ServiceAccountTokenProjection{
 								Audience:          "openshift",
 								ExpirationSeconds: &[]int64{3600}[0],
-								Path:              "token",
+								Path:              TokenName,
 							},
 						},
 					},
@@ -823,7 +823,7 @@ func (system *System) SidekiqPodVolumes() []v1.Volume {
 							ServiceAccountToken: &v1.ServiceAccountTokenProjection{
 								Audience:          "openshift",
 								ExpirationSeconds: &[]int64{3600}[0],
-								Path:              "token",
+								Path:              TokenName,
 							},
 						},
 					},
