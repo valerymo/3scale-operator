@@ -303,7 +303,7 @@ Only one of the fields can be chosen. If no field is specified then PVC is used.
 | **Field**     | **json/yaml field**      | **Type**                                                                                                                         | **Required** | **Default value** | **Description**                                                                                                                                                                                                                                                                 |
 |---------------|--------------------------|----------------------------------------------------------------------------------------------------------------------------------|--------------|-------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Configuration | `configurationSecretRef` | [corev1.LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/#localobjectreference-v1-core) | Yes          | N/A               | Local object reference to the secret to be used where the AWS configuration is stored. See [LocalObjectReference](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/#localobjectreference-v1-core) on how to specify the local object reference to the secret |
-| STS           | `sts`                    | *STS struct {Enabled  *bool  `json:"enabled,omitempty"`     Audience string `json:"audience,omitempty"`}                         | No           | false , openshift | STS object reference to the secret           |
+| STS           | `sts`                    | [STSSpec](#STSSpec) | No | IAM S3 authentication | STS spec object |
 
 The secret name specified in the `configurationSecretRef` field must be
 pre-created by the user before creating the APIManager custom resource.
@@ -311,6 +311,14 @@ Otherwise the operator will complain about it. See the
 [fileStorage S3 credentials secret](#fileStorage-S3-credentials-secret)
 specification to see what fields the secret should have and the values
 that should be set on it.
+
+### STSSpec
+
+| *yaml Field* | **Type** | **Required** | **Default value** | **Description** |
+| --- | --- | --- | --- |
+| `enabled` | bool | No | `false` | Enable Secure Token Service for  short-term, limited-privilege security credentials |
+| `audience` | string | No | `openshift` | The ID the token is intended for. This field does not have any effect when STS is not enabled. |
+
 
 ### DeprecatedSystemS3Spec
 **DEPRECATED** Setting fields here has no effect. Use [SystemS3Spec](#SystemS3Spec) instead
