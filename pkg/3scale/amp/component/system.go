@@ -2,16 +2,16 @@ package component
 
 import (
 	"fmt"
-	policyv1 "k8s.io/api/policy/v1"
-	"path/filepath"
 	"sort"
 	"strconv"
 
-	"github.com/3scale/3scale-operator/pkg/helper"
 	appsv1 "github.com/openshift/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
+	policyv1 "k8s.io/api/policy/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
+
+	"github.com/3scale/3scale-operator/pkg/helper"
 )
 
 const (
@@ -251,7 +251,7 @@ func (system *System) buildSystemBaseEnv() []v1.EnvVar {
 			helper.EnvVarFromSecretOptional(AwsPathStyle, system.Options.S3FileStorageOptions.ConfigurationSecretName, AwsPathStyle),
 		)
 
-		if system.Options.S3FileStorageOptions.S3STSEnabled {
+		if system.Options.S3FileStorageOptions.STSEnabled {
 			result = append(result,
 				helper.EnvVarFromSecret(AwsRoleArn, system.Options.S3FileStorageOptions.ConfigurationSecretName, AwsRoleArn),
 				helper.EnvVarFromSecret(AwsWebIdentityTokenFile, system.Options.S3FileStorageOptions.ConfigurationSecretName, AwsWebIdentityTokenFile),
@@ -521,7 +521,7 @@ func (system *System) appPodVolumes() []v1.Volume {
 
 	res = append(res, systemConfigVolume)
 
-	if system.Options.S3FileStorageOptions != nil && system.Options.S3FileStorageOptions.S3STSEnabled {
+	if system.Options.S3FileStorageOptions != nil && system.Options.S3FileStorageOptions.STSEnabled {
 		s3CredsProjectedVolume := v1.Volume{
 			Name: S3StsCredentialsSecretName,
 			VolumeSource: v1.VolumeSource{
@@ -529,9 +529,9 @@ func (system *System) appPodVolumes() []v1.Volume {
 					Sources: []v1.VolumeProjection{
 						v1.VolumeProjection{
 							ServiceAccountToken: &v1.ServiceAccountTokenProjection{
-								Audience:          system.Options.S3FileStorageOptions.Audience,
+								Audience:          system.Options.S3FileStorageOptions.STSAudience,
 								ExpirationSeconds: &[]int64{3600}[0],
-								Path:              filepath.Base(system.Options.S3FileStorageOptions.TokenPath),
+								Path:              system.Options.S3FileStorageOptions.STSTokenMountRelativePath,
 							},
 						},
 					},
@@ -549,7 +549,7 @@ func (system *System) volumeNamesForSystemAppPreHookPod() []string {
 	if system.Options.PvcFileStorageOptions != nil {
 		res = append(res, SystemFileStoragePVCName)
 	}
-	if system.Options.S3FileStorageOptions != nil && system.Options.S3FileStorageOptions.S3STSEnabled {
+	if system.Options.S3FileStorageOptions != nil && system.Options.S3FileStorageOptions.STSEnabled {
 		res = append(res, S3StsCredentialsSecretName)
 	}
 	return res
@@ -811,7 +811,7 @@ func (system *System) SidekiqPodVolumes() []v1.Volume {
 
 	res = append(res, systemConfigVolume)
 
-	if system.Options.S3FileStorageOptions != nil && system.Options.S3FileStorageOptions.S3STSEnabled {
+	if system.Options.S3FileStorageOptions != nil && system.Options.S3FileStorageOptions.STSEnabled {
 		s3CredsProjectedVolume := v1.Volume{
 			Name: S3StsCredentialsSecretName,
 			VolumeSource: v1.VolumeSource{
@@ -819,9 +819,9 @@ func (system *System) SidekiqPodVolumes() []v1.Volume {
 					Sources: []v1.VolumeProjection{
 						v1.VolumeProjection{
 							ServiceAccountToken: &v1.ServiceAccountTokenProjection{
-								Audience:          system.Options.S3FileStorageOptions.Audience,
+								Audience:          system.Options.S3FileStorageOptions.STSAudience,
 								ExpirationSeconds: &[]int64{3600}[0],
-								Path:              filepath.Base(system.Options.S3FileStorageOptions.TokenPath),
+								Path:              system.Options.S3FileStorageOptions.STSTokenMountRelativePath,
 							},
 						},
 					},
@@ -928,11 +928,10 @@ func (system *System) systemConfigVolumeMount() v1.VolumeMount {
 }
 
 func (system *System) s3CredsProjectedVolumeMount() v1.VolumeMount {
-	tokenMountPath := filepath.Dir(system.Options.S3FileStorageOptions.TokenPath)
 	return v1.VolumeMount{
 		Name:      S3StsCredentialsSecretName,
 		ReadOnly:  true,
-		MountPath: tokenMountPath,
+		MountPath: system.Options.S3FileStorageOptions.STSTokenMountPath,
 	}
 }
 
@@ -942,7 +941,7 @@ func (system *System) appCommonContainerVolumeMounts(systemStorageReadonly bool)
 		res = append(res, system.systemStorageVolumeMount(systemStorageReadonly))
 	}
 
-	if system.Options.S3FileStorageOptions != nil && system.Options.S3FileStorageOptions.S3STSEnabled {
+	if system.Options.S3FileStorageOptions != nil && system.Options.S3FileStorageOptions.STSEnabled {
 		res = append(res, system.s3CredsProjectedVolumeMount())
 	}
 
@@ -978,7 +977,7 @@ func (system *System) sidekiqContainerVolumeMounts() []v1.VolumeMount {
 	res = append(res, systemTmpVolumeMount)
 	res = append(res, system.systemConfigVolumeMount())
 
-	if system.Options.S3FileStorageOptions != nil && system.Options.S3FileStorageOptions.S3STSEnabled {
+	if system.Options.S3FileStorageOptions != nil && system.Options.S3FileStorageOptions.STSEnabled {
 		res = append(res, system.s3CredsProjectedVolumeMount())
 	}
 

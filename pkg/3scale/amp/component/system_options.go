@@ -22,10 +22,11 @@ const (
 )
 
 type S3FileStorageOptions struct {
-	ConfigurationSecretName string `validate:"required"`
-	S3STSEnabled            bool
-	TokenPath               string
-	Audience                string
+	ConfigurationSecretName   string `validate:"required"`
+	STSEnabled                bool
+	STSTokenMountRelativePath string
+	STSTokenMountPath         string
+	STSAudience               string
 }
 
 type SystemSMTPSecretOptions struct {
