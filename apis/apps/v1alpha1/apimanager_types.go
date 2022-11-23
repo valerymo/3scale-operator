@@ -1078,7 +1078,7 @@ func (apimanager *APIManager) IsS3STSEnabled() bool {
 		*apimanager.Spec.System.FileStorageSpec.S3.STS.Enabled
 }
 
-func (apimanager *APIManager) IsS3AMIEnabled() bool {
+func (apimanager *APIManager) IsS3IAMEnabled() bool {
 	return apimanager.IsS3Enabled() && !apimanager.IsS3STSEnabled()
 }
 

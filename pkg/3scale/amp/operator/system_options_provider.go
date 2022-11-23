@@ -480,7 +480,7 @@ func (s *SystemOptionsProvider) setFileStorageOptions() error {
 		return nil
 	}
 
-	if s.apimanager.IsS3AMIEnabled() {
+	if s.apimanager.IsS3IAMEnabled() {
 		s.options.S3FileStorageOptions = &component.S3FileStorageOptions{
 			ConfigurationSecretName: s.apimanager.Spec.System.FileStorageSpec.S3.ConfigurationSecretRef.Name,
 			STSEnabled:              false,
