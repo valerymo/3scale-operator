@@ -755,7 +755,7 @@ func (system *System) AppDeploymentConfig() *appsv1.DeploymentConfig {
 						},
 					},
 					ServiceAccountName: "amp",
-					PriorityClassName:  system.Options.PriorityClassName,
+					PriorityClassName:  system.Options.PriorityClassNameApp,
 				}},
 		},
 	}
@@ -906,6 +906,7 @@ func (system *System) SidekiqDeploymentConfig() *appsv1.DeploymentConfig {
 						},
 					},
 					ServiceAccountName: "amp",
+					PriorityClassName:  system.Options.PriorityClassNameSidekiq,
 				}},
 		},
 	}
@@ -1316,6 +1317,7 @@ func (system *System) SphinxDeploymentConfig() *appsv1.DeploymentConfig {
 							Resources: *system.Options.SphinxContainerResourceRequirements,
 						},
 					},
+					PriorityClassName: system.Options.PriorityClassNameSphinx,
 				},
 			},
 		},
