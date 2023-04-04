@@ -37,9 +37,6 @@ func (s *SystemOptionsProvider) GetSystemOptions() (*component.SystemOptions, er
 	s.options.ApicastRegistryURL = *s.apimanager.Spec.Apicast.RegistryURL
 	s.options.TenantName = *s.apimanager.Spec.TenantName
 	s.options.WildcardDomain = s.apimanager.Spec.WildcardDomain
-	s.options.PriorityClassNameApp = s.apimanager.Spec.PriorityClassesNames.SystemApp
-	s.options.PriorityClassNameSidekiq = s.apimanager.Spec.PriorityClassesNames.SystemSidekiq
-	s.options.PriorityClassNameSphinx = s.apimanager.Spec.PriorityClassesNames.SystemSphinx
 
 	s.options.CommonLabels = s.commonLabels()
 	s.options.CommonAppLabels = s.commonAppLabels()
@@ -66,6 +63,7 @@ func (s *SystemOptionsProvider) GetSystemOptions() (*component.SystemOptions, er
 		return nil, err
 	}
 	s.setReplicas()
+	s.setPriorityClassNames()
 
 	s.options.SideKiqMetrics = true
 	s.options.AppMetrics = true
@@ -648,4 +646,20 @@ func (s *SystemOptionsProvider) sphinxPodTemplateLabels() map[string]string {
 	labels["deploymentConfig"] = "system-sphinx"
 
 	return labels
+}
+
+func (s *SystemOptionsProvider) setPriorityClassNames() {
+
+	//s.options.AppPriorityClassName = PodPrioritySystemNodeCritical
+	if s.apimanager.Spec.System.AppSpec.PriotiryClassName != nil {
+		s.options.AppPriorityClassName = *s.apimanager.Spec.System.AppSpec.PriotiryClassName
+	}
+	//s.options.SideKiqPriorityClassName = PodPrioritySystemNodeCritical
+	if s.apimanager.Spec.System.SidekiqSpec.PriotiryClassName != nil {
+		s.options.SideKiqPriorityClassName = *s.apimanager.Spec.System.SidekiqSpec.PriotiryClassName
+	}
+	//s.options.SphinxPriorityClassName = PodPrioritySystemNodeCritical
+	if s.apimanager.Spec.System.SphinxSpec.PriotiryClassName != nil {
+		s.options.SphinxPriorityClassName = *s.apimanager.Spec.System.SphinxSpec.PriotiryClassName
+	}
 }
