@@ -1087,7 +1087,7 @@ spec:
                               tracer is `jaeger`. If not set, `jaeger` will be used.
                             type: string
                         type: object
-                      priotiryClassName:
+                      priorityClassName:
                         type: string
                       replicas:
                         format: int64
@@ -2219,7 +2219,7 @@ spec:
                               tracer is `jaeger`. If not set, `jaeger` will be used.
                             type: string
                         type: object
-                      priotiryClassName:
+                      priorityClassName:
                         type: string
                       replicas:
                         format: int64
@@ -3208,7 +3208,7 @@ spec:
                                 type: array
                             type: object
                         type: object
-                      priotiryClassName:
+                      priorityClassName:
                         type: string
                       replicas:
                         format: int64
@@ -4189,7 +4189,7 @@ spec:
                                 type: array
                             type: object
                         type: object
-                      priotiryClassName:
+                      priorityClassName:
                         type: string
                       replicas:
                         format: int64
@@ -6110,7 +6110,7 @@ spec:
                                 type: array
                             type: object
                         type: object
-                      priotiryClassName:
+                      priorityClassName:
                         type: string
                       replicas:
                         format: int64
@@ -7203,7 +7203,7 @@ spec:
                               More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
                             type: object
                         type: object
-                      priotiryClassName:
+                      priorityClassName:
                         type: string
                       providerContainerResources:
                         description: ResourceRequirements describes the compute resource
@@ -8274,7 +8274,7 @@ spec:
                                   the PersistentVolume backing this claim.
                                 type: string
                             type: object
-                          priotiryClassName:
+                          priorityClassName:
                             type: string
                           resources:
                             description: ResourceRequirements describes the compute
@@ -10368,7 +10368,7 @@ spec:
                     type: object
                   memcachedImage:
                     type: string
-                  memcachedPriotiryClassName:
+                  memcachedPriorityClassName:
                     type: string
                   memcachedResources:
                     description: ResourceRequirements describes the compute resource
@@ -11312,7 +11312,7 @@ spec:
                       storageClassName:
                         type: string
                     type: object
-                  redisPriotiryClassName:
+                  redisPriorityClassName:
                     type: string
                   redisResources:
                     description: ResourceRequirements describes the compute resource
@@ -12285,7 +12285,7 @@ spec:
                                 type: array
                             type: object
                         type: object
-                      priotiryClassName:
+                      priorityClassName:
                         type: string
                       replicas:
                         format: int64
@@ -13264,7 +13264,7 @@ spec:
                                 type: array
                             type: object
                         type: object
-                      priotiryClassName:
+                      priorityClassName:
                         type: string
                       resources:
                         description: ResourceRequirements describes the compute resource
@@ -14248,7 +14248,7 @@ spec:
                                 type: array
                             type: object
                         type: object
-                      priotiryClassName:
+                      priorityClassName:
                         type: string
                       replicas:
                         format: int64
@@ -15191,7 +15191,7 @@ spec:
                             type: array
                         type: object
                     type: object
-                  databasePriotiryClassName:
+                  databasePriorityClassName:
                     type: string
                   databaseResources:
                     description: ResourceRequirements describes the compute resource
@@ -16168,7 +16168,7 @@ spec:
                                 type: array
                             type: object
                         type: object
-                      priotiryClassName:
+                      priorityClassName:
                         type: string
                       replicas:
                         format: int64

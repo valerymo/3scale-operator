@@ -264,7 +264,7 @@ type ApicastProductionSpec struct {
 	// +optional
 	ServiceCacheSize *int32 `json:"serviceCacheSize,omitempty"` // APICAST_SERVICE_CACHE_SIZE
 	// +optional
-	PriotiryClassName *string `json:"priotiryClassName,omitempty"`
+	PriorityClassName *string `json:"priorityClassName,omitempty"`
 }
 
 type ApicastStagingSpec struct {
@@ -324,7 +324,7 @@ type ApicastStagingSpec struct {
 	// +optional
 	ServiceCacheSize *int32 `json:"serviceCacheSize,omitempty"` // APICAST_SERVICE_CACHE_SIZE
 	// +optional
-	PriotiryClassName *string `json:"priotiryClassName,omitempty"`
+	PriorityClassName *string `json:"priorityClassName,omitempty"`
 }
 
 type BackendSpec struct {
@@ -363,7 +363,7 @@ type BackendListenerSpec struct {
 	// +optional
 	Resources *v1.ResourceRequirements `json:"resources,omitempty"`
 	// +optional
-	PriotiryClassName *string `json:"priotiryClassName,omitempty"`
+	PriorityClassName *string `json:"priorityClassName,omitempty"`
 }
 
 type BackendWorkerSpec struct {
@@ -376,7 +376,7 @@ type BackendWorkerSpec struct {
 	// +optional
 	Resources *v1.ResourceRequirements `json:"resources,omitempty"`
 	// +optional
-	PriotiryClassName *string `json:"priotiryClassName,omitempty"`
+	PriorityClassName *string `json:"priorityClassName,omitempty"`
 }
 
 type BackendCronSpec struct {
@@ -389,7 +389,7 @@ type BackendCronSpec struct {
 	// +optional
 	Resources *v1.ResourceRequirements `json:"resources,omitempty"`
 	// +optional
-	PriotiryClassName *string `json:"priotiryClassName,omitempty"`
+	PriorityClassName *string `json:"priorityClassName,omitempty"`
 }
 
 type SystemSpec struct {
@@ -406,7 +406,7 @@ type SystemSpec struct {
 	// +optional
 	MemcachedResources *v1.ResourceRequirements `json:"memcachedResources,omitempty"`
 	// +optional
-	MemcachedPriotiryClassName *string `json:"memcachedPriotiryClassName,omitempty"`
+	MemcachedPriorityClassName *string `json:"memcachedPriorityClassName,omitempty"`
 
 	// +optional
 	RedisImage *string `json:"redisImage,omitempty"`
@@ -420,7 +420,7 @@ type SystemSpec struct {
 	// +optional
 	RedisResources *v1.ResourceRequirements `json:"redisResources,omitempty"`
 	// +optional
-	RedisPriotiryClassName *string `json:"redisPriotiryClassName,omitempty"`
+	RedisPriorityClassName *string `json:"redisPriorityClassName,omitempty"`
 
 	// TODO should this field be optional? We have different approaches in Kubernetes.
 	// For example, in v1.Volume it is optional and there's an implied behaviour
@@ -459,7 +459,7 @@ type SystemAppSpec struct {
 	// +optional
 	DeveloperContainerResources *v1.ResourceRequirements `json:"developerContainerResources,omitempty"`
 	// +optional
-	PriotiryClassName *string `json:"priotiryClassName,omitempty"`
+	PriorityClassName *string `json:"priorityClassName,omitempty"`
 }
 
 type SystemSidekiqSpec struct {
@@ -472,7 +472,7 @@ type SystemSidekiqSpec struct {
 	// +optional
 	Resources *v1.ResourceRequirements `json:"resources,omitempty"`
 	// +optional
-	PriotiryClassName *string `json:"priotiryClassName,omitempty"`
+	PriorityClassName *string `json:"priorityClassName,omitempty"`
 }
 
 type SystemSphinxSpec struct {
@@ -483,7 +483,7 @@ type SystemSphinxSpec struct {
 	// +optional
 	Resources *v1.ResourceRequirements `json:"resources,omitempty"`
 	// +optional
-	PriotiryClassName *string `json:"priotiryClassName,omitempty"`
+	PriorityClassName *string `json:"priorityClassName,omitempty"`
 }
 
 type SystemFileStorageSpec struct {
@@ -560,7 +560,7 @@ type SystemMySQLSpec struct {
 	// +optional
 	Resources *v1.ResourceRequirements `json:"resources,omitempty"`
 	// +optional
-	PriotiryClassName *string `json:"priotiryClassName,omitempty"`
+	PriorityClassName *string `json:"priorityClassName,omitempty"`
 }
 
 type SystemPostgreSQLSpec struct {
@@ -621,7 +621,7 @@ type ZyncSpec struct {
 	QueSpec *ZyncQueSpec `json:"queSpec,omitempty"`
 
 	// +optional
-	DatabasePriotiryClassName *string `json:"databasePriotiryClassName,omitempty"`
+	DatabasePriorityClassName *string `json:"databasePriorityClassName,omitempty"`
 }
 
 type ZyncAppSpec struct {
@@ -634,7 +634,7 @@ type ZyncAppSpec struct {
 	// +optional
 	Resources *v1.ResourceRequirements `json:"resources,omitempty"`
 	// +optional
-	PriotiryClassName *string `json:"priotiryClassName,omitempty"`
+	PriorityClassName *string `json:"priorityClassName,omitempty"`
 }
 
 type ZyncQueSpec struct {
@@ -647,7 +647,7 @@ type ZyncQueSpec struct {
 	// +optional
 	Resources *v1.ResourceRequirements `json:"resources,omitempty"`
 	// +optional
-	PriotiryClassName *string `json:"priotiryClassName,omitempty"`
+	PriorityClassName *string `json:"priorityClassName,omitempty"`
 }
 
 type HighAvailabilitySpec struct {

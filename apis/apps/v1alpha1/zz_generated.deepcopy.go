@@ -600,8 +600,8 @@ func (in *ApicastProductionSpec) DeepCopyInto(out *ApicastProductionSpec) {
 		*out = new(int32)
 		**out = **in
 	}
-	if in.PriotiryClassName != nil {
-		in, out := &in.PriotiryClassName, &out.PriotiryClassName
+	if in.PriorityClassName != nil {
+		in, out := &in.PriorityClassName, &out.PriorityClassName
 		*out = new(string)
 		**out = **in
 	}
@@ -756,8 +756,8 @@ func (in *ApicastStagingSpec) DeepCopyInto(out *ApicastStagingSpec) {
 		*out = new(int32)
 		**out = **in
 	}
-	if in.PriotiryClassName != nil {
-		in, out := &in.PriotiryClassName, &out.PriotiryClassName
+	if in.PriorityClassName != nil {
+		in, out := &in.PriorityClassName, &out.PriorityClassName
 		*out = new(string)
 		**out = **in
 	}
@@ -798,8 +798,8 @@ func (in *BackendCronSpec) DeepCopyInto(out *BackendCronSpec) {
 		*out = new(v1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.PriotiryClassName != nil {
-		in, out := &in.PriotiryClassName, &out.PriotiryClassName
+	if in.PriorityClassName != nil {
+		in, out := &in.PriorityClassName, &out.PriorityClassName
 		*out = new(string)
 		**out = **in
 	}
@@ -840,8 +840,8 @@ func (in *BackendListenerSpec) DeepCopyInto(out *BackendListenerSpec) {
 		*out = new(v1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.PriotiryClassName != nil {
-		in, out := &in.PriotiryClassName, &out.PriotiryClassName
+	if in.PriorityClassName != nil {
+		in, out := &in.PriorityClassName, &out.PriorityClassName
 		*out = new(string)
 		**out = **in
 	}
@@ -964,8 +964,8 @@ func (in *BackendWorkerSpec) DeepCopyInto(out *BackendWorkerSpec) {
 		*out = new(v1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.PriotiryClassName != nil {
-		in, out := &in.PriotiryClassName, &out.PriotiryClassName
+	if in.PriorityClassName != nil {
+		in, out := &in.PriorityClassName, &out.PriorityClassName
 		*out = new(string)
 		**out = **in
 	}
@@ -1309,8 +1309,8 @@ func (in *SystemAppSpec) DeepCopyInto(out *SystemAppSpec) {
 		*out = new(v1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.PriotiryClassName != nil {
-		in, out := &in.PriotiryClassName, &out.PriotiryClassName
+	if in.PriorityClassName != nil {
+		in, out := &in.PriorityClassName, &out.PriorityClassName
 		*out = new(string)
 		**out = **in
 	}
@@ -1441,8 +1441,8 @@ func (in *SystemMySQLSpec) DeepCopyInto(out *SystemMySQLSpec) {
 		*out = new(v1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.PriotiryClassName != nil {
-		in, out := &in.PriotiryClassName, &out.PriotiryClassName
+	if in.PriorityClassName != nil {
+		in, out := &in.PriorityClassName, &out.PriorityClassName
 		*out = new(string)
 		**out = **in
 	}
@@ -1626,8 +1626,8 @@ func (in *SystemSidekiqSpec) DeepCopyInto(out *SystemSidekiqSpec) {
 		*out = new(v1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.PriotiryClassName != nil {
-		in, out := &in.PriotiryClassName, &out.PriotiryClassName
+	if in.PriorityClassName != nil {
+		in, out := &in.PriorityClassName, &out.PriorityClassName
 		*out = new(string)
 		**out = **in
 	}
@@ -1673,8 +1673,8 @@ func (in *SystemSpec) DeepCopyInto(out *SystemSpec) {
 		*out = new(v1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.MemcachedPriotiryClassName != nil {
-		in, out := &in.MemcachedPriotiryClassName, &out.MemcachedPriotiryClassName
+	if in.MemcachedPriorityClassName != nil {
+		in, out := &in.MemcachedPriorityClassName, &out.MemcachedPriorityClassName
 		*out = new(string)
 		**out = **in
 	}
@@ -1705,8 +1705,8 @@ func (in *SystemSpec) DeepCopyInto(out *SystemSpec) {
 		*out = new(v1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.RedisPriotiryClassName != nil {
-		in, out := &in.RedisPriotiryClassName, &out.RedisPriotiryClassName
+	if in.RedisPriorityClassName != nil {
+		in, out := &in.RedisPriorityClassName, &out.RedisPriorityClassName
 		*out = new(string)
 		**out = **in
 	}
@@ -1767,8 +1767,8 @@ func (in *SystemSphinxSpec) DeepCopyInto(out *SystemSphinxSpec) {
 		*out = new(v1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.PriotiryClassName != nil {
-		in, out := &in.PriotiryClassName, &out.PriotiryClassName
+	if in.PriorityClassName != nil {
+		in, out := &in.PriorityClassName, &out.PriorityClassName
 		*out = new(string)
 		**out = **in
 	}
@@ -1809,8 +1809,8 @@ func (in *ZyncAppSpec) DeepCopyInto(out *ZyncAppSpec) {
 		*out = new(v1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.PriotiryClassName != nil {
-		in, out := &in.PriotiryClassName, &out.PriotiryClassName
+	if in.PriorityClassName != nil {
+		in, out := &in.PriorityClassName, &out.PriorityClassName
 		*out = new(string)
 		**out = **in
 	}
@@ -1851,8 +1851,8 @@ func (in *ZyncQueSpec) DeepCopyInto(out *ZyncQueSpec) {
 		*out = new(v1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.PriotiryClassName != nil {
-		in, out := &in.PriotiryClassName, &out.PriotiryClassName
+	if in.PriorityClassName != nil {
+		in, out := &in.PriorityClassName, &out.PriorityClassName
 		*out = new(string)
 		**out = **in
 	}
@@ -1908,8 +1908,8 @@ func (in *ZyncSpec) DeepCopyInto(out *ZyncSpec) {
 		*out = new(ZyncQueSpec)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.DatabasePriotiryClassName != nil {
-		in, out := &in.DatabasePriotiryClassName, &out.DatabasePriotiryClassName
+	if in.DatabasePriorityClassName != nil {
+		in, out := &in.DatabasePriorityClassName, &out.DatabasePriorityClassName
 		*out = new(string)
 		**out = **in
 	}
