@@ -196,3 +196,15 @@ func DeploymentConfigPodTemplateLabelsMutator(desired, existing *appsv1.Deployme
 
 	return updated, nil
 }
+
+// DeploymentConfigPriorityClassMutator ensures priorityclass is reconciled
+func DeploymentConfigPriorityClassMutator(desired, existing *appsv1.DeploymentConfig) (bool, error) {
+	updated := false
+
+	if existing.Spec.Template.Spec.PriorityClassName != desired.Spec.Template.Spec.PriorityClassName {
+		existing.Spec.Template.Spec.PriorityClassName = desired.Spec.Template.Spec.PriorityClassName
+		updated = true
+	}
+
+	return updated, nil
+}
