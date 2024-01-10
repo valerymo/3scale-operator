@@ -558,6 +558,9 @@ spec:
 
 * **NOTE 1**: `httpMethod`, `pattern`, `increment` and `metricMethodRef` fields are required.
 * **NOTE 2**: `metricMethodRef` holds a reference to the existing metric or method map key name `system_name`. In the example, `hits`.
+* **NOTE 3**: The combination of `pattern`, `httpMethod` and `metricMethodRef` must be unique among all mapping rules. Having the same values gfor all three is a `duplicated mapping rule`. 
+  - The last duplicated mapping rule will be accepted by 3scale, but the previous one will be ignored and will not appear on the 3scale admin portal. 
+  - Duplicate rules must be manually removed from the product CR.
 
 ### Product application plans
 

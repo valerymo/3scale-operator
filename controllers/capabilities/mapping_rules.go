@@ -1,13 +1,12 @@
 package controllers
 
 import (
-	"errors"
 	"fmt"
+	"github.com/3scale/3scale-operator/pkg/helper"
 	"strconv"
+	"strings"
 
 	capabilitiesv1beta1 "github.com/3scale/3scale-operator/apis/capabilities/v1beta1"
-	"github.com/3scale/3scale-operator/pkg/helper"
-
 	threescaleapi "github.com/3scale/3scale-porta-go-client/client"
 )
 
@@ -15,7 +14,11 @@ func (t *ProductThreescaleReconciler) syncMappingRules(_ interface{}) error {
 	desiredKeys := make([]string, 0, len(t.resource.Spec.MappingRules))
 	desiredMap := map[string]capabilitiesv1beta1.MappingRuleSpec{}
 	for _, spec := range t.resource.Spec.MappingRules {
-		key := fmt.Sprintf("%s:%s", spec.HTTPMethod, spec.Pattern)
+		metricID, err := t.productEntity.FindMethodMetricIDBySystemName(spec.MetricMethodRef)
+		if err != nil {
+			return fmt.Errorf("error syncMappingRules: %w", err)
+		}
+		key := fmt.Sprintf("%s:%s:%s", spec.HTTPMethod, spec.Pattern, strconv.FormatInt(metricID, 10))
 		desiredKeys = append(desiredKeys, key)
 		desiredMap[key] = spec
 	}
@@ -76,6 +79,11 @@ func (t *ProductThreescaleReconciler) syncMappingRules(_ interface{}) error {
 	// the configuration
 	t.logger.V(1).Info("syncMappingRules", "desiredKeys", desiredKeys)
 	for desiredIdxZeroBased, desiredKey := range desiredKeys {
+		sMetricID := strings.Split(desiredKey, ":")[2]
+		metricID, err := strconv.ParseInt(sMetricID, 10, 64)
+		if err != nil {
+			return fmt.Errorf("can't convert metricID string : %s to an int64!\n", sMetricID)
+		}
 		desiredMappingRule := desiredMap[desiredKey]
 		// We define the position sent to System starting from one (one-based array)
 		// instead of zero-based. The reason for that is that System API does not
@@ -86,14 +94,14 @@ func (t *ProductThreescaleReconciler) syncMappingRules(_ interface{}) error {
 		if existingMappingRule, ok := existingMap[desiredKey]; ok {
 			// Reconcile MappingRule
 			t.logger.V(1).Info("syncMappingRules", "desiredMappingRuleToReconcile", desiredKey, "position", desiredIdx)
-			err := t.reconcileMappingRuleWithPosition(desiredMappingRule, desiredIdx, existingMappingRule)
+			err := t.reconcileMappingRuleWithPosition(desiredMappingRule, desiredIdx, existingMappingRule, metricID)
 			if err != nil {
 				return fmt.Errorf("Error sync product [%s] mappingrules: %w", t.resource.Spec.SystemName, err)
 			}
 		} else {
 			// Create MappingRule
 			t.logger.V(1).Info("syncMappingRules", "desiredMappingRuleToCreate", desiredKey, "position", desiredIdx)
-			err := t.createNewMappingRuleWithPosition(desiredMappingRule, desiredIdx)
+			err := t.createNewMappingRuleWithPosition(desiredMappingRule, desiredIdx, metricID)
 			if err != nil {
 				return fmt.Errorf("Error sync product [%s] mappingrules: %w", t.resource.Spec.SystemName, err)
 			}
@@ -120,31 +128,22 @@ func (t *ProductThreescaleReconciler) getExistingMappingRules() (map[string]thre
 		return nil, fmt.Errorf("Error getting product [%s] mappingrules: %w", t.resource.Spec.SystemName, err)
 	}
 	for _, item := range existingList.MappingRules {
-		key := fmt.Sprintf("%s:%s", item.Element.HTTPMethod, item.Element.Pattern)
+		key := fmt.Sprintf("%s:%s:%s:%s", item.Element.HTTPMethod, item.Element.Pattern, strconv.FormatInt(item.Element.MetricID, 10), strconv.Itoa(item.Element.Position))
 		existingMap[key] = item.Element
 	}
 
 	return existingMap, nil
 }
 
-func (t *ProductThreescaleReconciler) reconcileMappingRuleWithPosition(desired capabilitiesv1beta1.MappingRuleSpec, desiredPosition int, existing threescaleapi.MappingRuleItem) error {
+func (t *ProductThreescaleReconciler) reconcileMappingRuleWithPosition(desired capabilitiesv1beta1.MappingRuleSpec, desiredPosition int, existing threescaleapi.MappingRuleItem, desiredMetricID int64) error {
 	params := threescaleapi.Params{}
 
 	//
 	// Reconcile metric or method
 	//
-	metricID, err := t.productEntity.FindMethodMetricIDBySystemName(desired.MetricMethodRef)
-	if err != nil {
-		return fmt.Errorf("Error reconcile product mapping rule: %w", err)
-	}
 
-	if metricID < 0 {
-		// Should not happen as metric and method references have been validated and should exists
-		return errors.New("product metric method ref for mapping rule not found")
-	}
-
-	if metricID != existing.MetricID {
-		params["metric_id"] = strconv.FormatInt(metricID, 10)
+	if desiredMetricID != existing.MetricID {
+		params["metric_id"] = strconv.FormatInt(desiredMetricID, 10)
 	}
 
 	//
@@ -182,16 +181,7 @@ func (t *ProductThreescaleReconciler) reconcileMappingRuleWithPosition(desired c
 	return nil
 }
 
-func (t *ProductThreescaleReconciler) createNewMappingRuleWithPosition(desired capabilitiesv1beta1.MappingRuleSpec, desiredPosition int) error {
-	metricID, err := t.productEntity.FindMethodMetricIDBySystemName(desired.MetricMethodRef)
-	if err != nil {
-		return fmt.Errorf("Error creating product [%s] mappingrule: %w", t.resource.Spec.SystemName, err)
-	}
-
-	if metricID < 0 {
-		// Should not happen as metric and method references have been validated and should exists
-		return errors.New("product metric method ref for mapping rule not found")
-	}
+func (t *ProductThreescaleReconciler) createNewMappingRuleWithPosition(desired capabilitiesv1beta1.MappingRuleSpec, desiredPosition int, metricID int64) error {
 
 	params := threescaleapi.Params{
 		"pattern":     desired.Pattern,
@@ -206,7 +196,9 @@ func (t *ProductThreescaleReconciler) createNewMappingRuleWithPosition(desired c
 
 	params["position"] = strconv.FormatInt(int64(desiredPosition), 10)
 
-	err = t.productEntity.CreateMappingRule(params)
+	t.logger.V(1).Info("info before CreateMappingRule", "Pattern", desired.Pattern, "HTTPMethod", desired.HTTPMethod, "MetricMethodRef", desired.MetricMethodRef, "metricID", strconv.FormatInt(metricID, 10))
+
+	err := t.productEntity.CreateMappingRule(params)
 	if err != nil {
 		return fmt.Errorf("Error creating product [%s] mappingrule: %w", t.resource.Spec.SystemName, err)
 	}
