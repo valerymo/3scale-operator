@@ -16,7 +16,7 @@ OS := $(shell uname | awk '{print tolower($$0)}' | sed -e s/linux/linux-gnu/ )
 ARCH := $(shell uname -m)
 
 # Image URL to use all building/pushing image targets
-IMG ?= quay.io/3scale/3scale-operator:v0.11.0
+IMG ?= quay.io/3scale/3scale-operator:v0.11.1
 
 CRD_OPTIONS ?= "crd:crdVersions=v1"
 
