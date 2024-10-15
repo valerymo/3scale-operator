@@ -89,3 +89,12 @@ func SecretReconcileField(fieldName string) func(desired, existing *v1.Secret) b
 		return updated
 	}
 }
+
+func SecretReconcileSingleENVField(desired, existing *v1.Secret, fieldName string) bool {
+	updated := false
+	if _, ok := existing.Data[fieldName]; !ok {
+		existing.Data[fieldName] = desired.Data[fieldName]
+		updated = true
+	}
+	return updated
+}

@@ -140,8 +140,13 @@ func (r *RedisReconciler) Reconcile() (reconcile.Result, error) {
 
 	// Secret
 	err = r.ReconcileSecret(r.Secret(redis), reconcilers.DefaultsOnlySecretMutator)
-	if err != nil {
-		return reconcile.Result{}, err
+
+	if r.Secret(redis).Name == "system-redis" ||
+		r.Secret(redis).Name == "backend-redis" {
+		err = r.ReconcileSecret(r.Secret(redis), r.redisSecretMutator)
+		if err != nil {
+			return reconcile.Result{}, err
+		}
 	}
 
 	return reconcile.Result{}, nil
@@ -202,4 +207,32 @@ func RedisConfigMap(apimanager *appsv1alpha1.APIManager) (*component.RedisConfig
 		return nil, err
 	}
 	return component.NewRedisConfigMap(opts), nil
+}
+
+// TLS
+func (r *RedisReconciler) redisSecretMutator(existingObj, desiredObj common.KubernetesObject) (bool, error) {
+	fmt.Printf("######## RedisSecret mutator called\n")
+	existing, ok := existingObj.(*corev1.Secret)
+	if !ok {
+		return false, fmt.Errorf("%T is not a *v1.Secret", existingObj)
+	}
+	desired, ok := desiredObj.(*corev1.Secret)
+	if !ok {
+		return false, fmt.Errorf("%T is not a *v1.Secret", desiredObj)
+	}
+
+	fieldUpdated := reconcilers.SecretReconcileSingleENVField(desired, existing, "REDIS_SSL")
+	if !fieldUpdated {
+		return false, nil
+	}
+	fieldUpdated = reconcilers.SecretReconcileSingleENVField(desired, existing, "CONFIG_REDIS_SSL")
+	if !fieldUpdated {
+		return false, nil
+	}
+	fieldUpdated = reconcilers.SecretReconcileSingleENVField(desired, existing, "CONFIG_QUEUES_SSL")
+	if !fieldUpdated {
+		return false, nil
+	}
+	fmt.Printf("######## RedisSecret mutator end, return true\n")
+	return true, nil
 }

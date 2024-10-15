@@ -80,6 +80,11 @@ func (r *RedisOptionsProvider) GetRedisOptions() (*component.RedisOptions, error
 		return nil, fmt.Errorf("GetRedisOptions reading secret options: %w", err)
 	}
 
+	err = r.setSSLEnvVars()
+	if err != nil {
+		return nil, fmt.Errorf("GetRedisOptions reading secret options: %w", err)
+	}
+
 	err = r.options.Validate()
 	if err != nil {
 		return nil, fmt.Errorf("GetRedisOptions validating: %w", err)
@@ -147,6 +152,81 @@ func (r *RedisOptionsProvider) setSecretBasedOptions() error {
 			component.SystemSecretSystemRedisSecretName,
 			component.SystemSecretSystemRedisSentinelRole,
 			component.DefaultSystemRedisSentinelRole(),
+		},
+
+		//TLS
+		{
+			&r.options.SystemRedisCAFile,
+			component.SystemSecretSystemRedisSecretName,
+			component.SystemSecretSystemRedisCAFile,
+			component.DefaultSystemRedisCAFile(),
+		},
+		{
+			&r.options.SystemRedisClientCertificate,
+			component.SystemSecretSystemRedisSecretName,
+			component.SystemSecretSystemRedisClientCertificate,
+			component.DefaultSystemRedisClientCertificate(),
+		},
+		{
+			&r.options.SystemRedisPrivateKey,
+			component.SystemSecretSystemRedisSecretName,
+			component.SystemSecretSystemRedisPrivateKey,
+			component.DefaultSystemRedisPrivateKey(),
+		},
+		{
+			&r.options.SystemRedisSSL,
+			component.SystemSecretSystemRedisSecretName,
+			component.SystemSecretSystemRedisSSL,
+			component.DefaultSystemRedisSSL(),
+		},
+		// TLS / Backend
+		{
+			&r.options.BackendConfigCAFile,
+			component.BackendSecretBackendRedisSecretName,
+			component.BackendSecretBackendRedisConfigCAFile,
+			component.DefaultBackendConfigCAFile(),
+		},
+		{
+			&r.options.BackendConfigClientCertificate,
+			component.BackendSecretBackendRedisSecretName,
+			component.BackendSecretBackendRedisConfigClientCertificate,
+			component.DefaultBackendConfigClientCertificate(),
+		},
+		{
+			&r.options.BackendConfigPrivateKey,
+			component.BackendSecretBackendRedisSecretName,
+			component.BackendSecretBackendRedisConfigPrivateKey,
+			component.DefaultBackendConfigPrivateKey(),
+		},
+		{
+			&r.options.BackendConfigSSL,
+			component.BackendSecretBackendRedisSecretName,
+			component.BackendSecretBackendRedisConfigSSL,
+			component.DefaultBackendConfigSSL(),
+		},
+		{
+			&r.options.BackendConfigQueuesCAFile,
+			component.BackendSecretBackendRedisSecretName,
+			component.BackendSecretBackendRedisConfigQueuesCAFile,
+			component.DefaultBackendConfigQueuesCAFile(),
+		},
+		{
+			&r.options.BackendConfigQueuesClientCertificate,
+			component.BackendSecretBackendRedisSecretName,
+			component.BackendSecretBackendRedisConfigQueuesClientCertificate,
+			component.DefaultBackendConfigQueuesClientCertificate(),
+		},
+		{
+			&r.options.BackendConfigQueuesPrivateKey,
+			component.BackendSecretBackendRedisSecretName,
+			component.BackendSecretBackendRedisConfigQueuesPrivateKey,
+			component.DefaultBackendConfigQueuesPrivateKey(),
+		},
+		{
+			&r.options.BackendConfigQueuesSSL,
+			component.BackendSecretBackendRedisSecretName,
+			component.BackendSecretBackendRedisConfigQueuesSSL,
+			component.DefaultBackendConfigQueuesSSL(),
 		},
 	}
 
@@ -305,4 +385,34 @@ func (r *RedisOptionsProvider) redisConfigMapResourceVersion() (string, error) {
 		return "", err
 	}
 	return cm.GetResourceVersion(), nil
+}
+
+func (r *RedisOptionsProvider) setSSLEnvVars() error {
+	if len([]string{
+		r.options.SystemRedisCAFile,
+		r.options.SystemRedisClientCertificate,
+		r.options.SystemRedisPrivateKey,
+	}) > 0 {
+		fmt.Printf("############ SystemRedisSSL True ########")
+		r.options.SystemRedisSSL = "true"
+	}
+
+	if len([]string{
+		r.options.BackendConfigCAFile,
+		r.options.BackendConfigClientCertificate,
+		r.options.BackendConfigPrivateKey,
+	}) > 0 {
+		fmt.Printf("############ BackendConfigSSL True ########")
+		r.options.BackendConfigSSL = "true"
+	}
+
+	if len([]string{
+		r.options.BackendConfigQueuesCAFile,
+		r.options.BackendConfigQueuesClientCertificate,
+		r.options.BackendConfigQueuesPrivateKey,
+	}) > 0 {
+		fmt.Printf("############ BackendConfigQueuesSSL True ########")
+		r.options.BackendConfigQueuesSSL = "true"
+	}
+	return nil
 }
