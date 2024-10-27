@@ -47,9 +47,11 @@ func (r *RedisOptionsProvider) GetRedisOptions() (*component.RedisOptions, error
 
 	r.options.SystemCommonLabels = r.systemCommonLabels()
 	r.options.SystemRedisLabels = r.systemRedisLabels()
+	r.options.SystemRedisSecretLabels = r.systemRedisSecretLabels()
 	r.options.SystemRedisPodTemplateLabels = r.systemRedisPodTemplateLabels()
 	r.options.BackendCommonLabels = r.backendCommonLabels()
 	r.options.BackendRedisLabels = r.backendRedisLabels()
+	r.options.BackendRedisSecretLabels = r.backendRedisSecretLabels()
 	r.options.BackendRedisPodTemplateLabels = r.backendRedisPodTemplateLabels()
 
 	var err error
@@ -380,4 +382,16 @@ func (r *RedisOptionsProvider) redisConfigMapResourceVersion() (string, error) {
 		return "", err
 	}
 	return cm.GetResourceVersion(), nil
+}
+
+func (r *RedisOptionsProvider) backendRedisSecretLabels() map[string]string {
+	labels := r.backendCommonLabels()
+	labels["apimanager.apps.3scale.net/watched-by"] = "backend"
+	return labels
+}
+
+func (r *RedisOptionsProvider) systemRedisSecretLabels() map[string]string {
+	labels := r.systemCommonLabels()
+	labels["apimanager.apps.3scale.net/watched-by"] = "system"
+	return labels
 }

@@ -288,7 +288,7 @@ func (redis *Redis) BackendRedisSecret() *v1.Secret {
 		},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:   BackendSecretBackendRedisSecretName,
-			Labels: redis.Options.BackendCommonLabels,
+			Labels: redis.Options.BackendRedisSecretLabels,
 		},
 		StringData: map[string]string{
 			BackendSecretBackendRedisStorageURLFieldName:           redis.Options.BackendStorageURL,
@@ -480,7 +480,7 @@ func (redis *Redis) SystemRedisSecret() *v1.Secret {
 		},
 		ObjectMeta: metav1.ObjectMeta{
 			Name:   SystemSecretSystemRedisSecretName,
-			Labels: redis.Options.SystemCommonLabels,
+			Labels: redis.Options.SystemRedisSecretLabels,
 		},
 		StringData: map[string]string{
 			SystemSecretSystemRedisURLFieldName:  redis.Options.SystemRedisURL,

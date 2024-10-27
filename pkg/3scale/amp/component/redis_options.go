@@ -24,9 +24,11 @@ type RedisOptions struct {
 
 	SystemCommonLabels            map[string]string `validate:"required"`
 	SystemRedisLabels             map[string]string `validate:"required"`
+	SystemRedisSecretLabels       map[string]string `validate:"required"`
 	SystemRedisPodTemplateLabels  map[string]string `validate:"required"`
 	BackendCommonLabels           map[string]string `validate:"required"`
 	BackendRedisLabels            map[string]string `validate:"required"`
+	BackendRedisSecretLabels      map[string]string `validate:"required"`
 	BackendRedisPodTemplateLabels map[string]string `validate:"required"`
 
 	SystemRedisPriorityClassName          string                        `validate:"-"`

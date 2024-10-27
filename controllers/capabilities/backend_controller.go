@@ -345,7 +345,34 @@ func (r *BackendReconciler) fetchTenantProductCRs(productsCRsList *capabilitiesv
 }
 
 func (r *BackendReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
+	err := ctrl.NewControllerManagedBy(mgr).
 		For(&capabilitiesv1beta1.Backend{}).
 		Complete(r)
+	if err != nil {
+		return err
+	}
+
+	//// create Predicate for Watch to trigger only when Data changed in redis secret
+	//// "BothPredicate" - combines WatchedByLabel and Data predicates
+	//redisSecretWatchedByLabelSelectorPredicate, err := predicate.LabelSelectorPredicate(metav1.LabelSelector{
+	//	MatchLabels: map[string]string{
+	//		helper.ApimanagerWatchedBySelectorKey: "backend",
+	//	},
+	//})
+	//if err != nil {
+	//	return nil
+	//}
+	//dataChangedPredicate := &helper.DataChangedPredicate{}
+	//bothPredicate := helper.BothPredicate{
+	//	WatchedByLabelPredicate: redisSecretWatchedByLabelSelectorPredicate,
+	//	DataPredicate:           dataChangedPredicate,
+	//}
+
+	watchedByDataOnlySecretLabelPredicate := helper.GetWatchedByDataOnlySecretLabelPredicate("backend")
+	err = ctrl.NewControllerManagedBy(mgr).
+		For(&corev1.Secret{}).
+		WithEventFilter(watchedByDataOnlySecretLabelPredicate).
+		Complete(r)
+
+	return err
 }

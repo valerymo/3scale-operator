@@ -362,12 +362,19 @@ func (r *APIManagerReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		return nil
 	}
 
+	watchedByDataOnlySecretLabelPredicate := helper.GetWatchedByDataOnlySecretLabelPredicate("system")
+
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&appsv1alpha1.APIManager{}).
 		Watches(
 			&v1.Secret{},
 			handler.EnqueueRequestsFromMapFunc(secretToApimanagerEventMapper.Map),
 			builder.WithPredicates(labelSelectorPredicate),
+		).
+		Watches(
+			&v1.Secret{},
+			handler.EnqueueRequestsFromMapFunc(secretToApimanagerEventMapper.Map),
+			builder.WithPredicates(watchedByDataOnlySecretLabelPredicate),
 		).
 		Owns(&k8sappsv1.Deployment{}).
 		Watches(&routev1.Route{}, handler.EnqueueRequestsFromMapFunc(handlers.Map)).
