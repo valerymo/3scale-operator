@@ -18,9 +18,8 @@ package v1alpha1
 
 import (
 	"fmt"
-	"github.com/3scale/3scale-operator/apis/apps"
-	"github.com/3scale/3scale-operator/pkg/apispkg/common"
-	"github.com/3scale/3scale-operator/version"
+	"reflect"
+
 	"github.com/RHsyseng/operator-utils/pkg/olm"
 	"github.com/go-logr/logr"
 	"github.com/google/go-cmp/cmp"
@@ -28,7 +27,10 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/validation/field"
-	"reflect"
+
+	"github.com/3scale/3scale-operator/apis/apps"
+	"github.com/3scale/3scale-operator/pkg/apispkg/common"
+	"github.com/3scale/3scale-operator/version"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!

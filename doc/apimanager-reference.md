@@ -728,7 +728,7 @@ The available configurable secrets are:
 | CONFIG_QUEUES_CA_FILE | Backend's redis file with configuration setting for the CA certificate that is used for secure communications in the context of a Redis queueing. | `""`                                                                                                              |
 | CONFIG_QUEUES_CERT | Backend's redis certificate used for establishing secure connections in a Redis queuing | `""`                                                                                                              |
 | CONFIG_QUEUES_PRIVATE_KEY | Backend's redis private key used for establishing secure connections in the context of Redis queuing. | `""`                                                                                                              |
-| CONFIG_QUEUES_SSL | This field is "true" if any of the other fields (CONFIG_QUEUES_CA_FILE, CONFIG_QUEUES_CERT, CONFIG_QUEUES_PRIVATE_KEY) are not empty. Otherwise it is "false"|`""`| `false`|
+| CONFIG_QUEUES_SSL | This field is "true" if any of the other fields (CONFIG_QUEUES_CA_FILE, CONFIG_QUEUES_CERT, CONFIG_QUEUES_PRIVATE_KEY) are not empty. Otherwise it is "false"| `false`|
 
 ### system-app
 
@@ -801,7 +801,7 @@ For Oracle:
 | REDIS_CA_FILE | System's redis file that contains the Certificate Authority (CA) certificate | `""` |
 | REDIS_CLIENT_CERT | System's Redis Client certificate | `""`|
 | REDIS_PRIVATE_KEY | System's redis private key used for authentication in SSL/TLS communication | `""`|
-| REDIS_SSL | This field is "true" if any of the other fields (REDIS_CA_FILE, REDIS_CLIENT_CERT, REDIS_PRIVATE_KEY) are not emp``ty. Otherwise it is "false"| `false`|
+| REDIS_SSL | This field is "true" if any of the other fields (REDIS_CA_FILE, REDIS_CLIENT_CERT, REDIS_PRIVATE_KEY) are not empty. Otherwise it is "false"| `false`|
 
 ### system-seed
 
