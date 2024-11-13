@@ -25,7 +25,7 @@ const (
 	backendRedisStorageVolumeName      = "backend-redis-storage"
 	backendRedisConfigMapKey           = "redis.conf"
 	backendRedisContainerName          = "backend-redis"
-	backendRedisConfigPath             = "/etc/redis.d/"
+	backendRedisConfigPath             = "/etc/redis/"
 )
 
 type Redis struct {
@@ -131,6 +131,20 @@ func (redis *Redis) buildPodVolumes() []v1.Volume {
 				},
 			},
 		},
+		{
+			Name: "redis-tls-volume",
+			VolumeSource: v1.VolumeSource{
+				Secret: &v1.SecretVolumeSource{
+					SecretName: "redis-tls-secret", // Name of the secret containing the TLS certs
+					Items: []v1.KeyToPath{
+						{Key: "ca.crt", Path: "ca.crt"},
+						{Key: "redis-server.crt", Path: "redis-server.crt"},
+						{Key: "redis-server.key", Path: "redis-server.key"},
+					},
+					DefaultMode: &[]int32{0644}[0],
+				},
+			},
+		},
 	}
 }
 
@@ -194,6 +208,11 @@ func (redis *Redis) buildPodContainerVolumeMounts() []v1.VolumeMount {
 		{
 			Name:      redisConfigVolumeName,
 			MountPath: backendRedisConfigPath,
+		},
+		{
+			Name:      "redis-tls-volume",
+			ReadOnly:  false,
+			MountPath: "/var/lib/redis/certs",
 		},
 	}
 }
@@ -359,7 +378,8 @@ func (redis *Redis) SystemDeployment() *k8sappsv1.Deployment {
 									ReadOnly:  false,
 								},
 							},
-						}, {
+						},
+						{
 							Name: "redis-config",
 							VolumeSource: v1.VolumeSource{
 								ConfigMap: &v1.ConfigMapVolumeSource{
@@ -372,6 +392,20 @@ func (redis *Redis) SystemDeployment() *k8sappsv1.Deployment {
 											Path: "redis.conf",
 										},
 									},
+								},
+							},
+						},
+						{
+							Name: "redis-tls-volume",
+							VolumeSource: v1.VolumeSource{
+								Secret: &v1.SecretVolumeSource{
+									SecretName: "redis-tls-secret", // Name of the secret containing the TLS certs
+									Items: []v1.KeyToPath{
+										{Key: "ca.crt", Path: "ca.crt"},
+										{Key: "redis-server.crt", Path: "redis-server.crt"},
+										{Key: "redis-server.key", Path: "redis-server.key"},
+									},
+									DefaultMode: &[]int32{0644}[0],
 								},
 							},
 						},
@@ -391,7 +425,12 @@ func (redis *Redis) SystemDeployment() *k8sappsv1.Deployment {
 								{
 									Name:      "redis-config",
 									ReadOnly:  false,
-									MountPath: "/etc/redis.d/",
+									MountPath: "/etc/redis/",
+								},
+								{
+									Name:      "redis-tls-volume",
+									ReadOnly:  false,
+									MountPath: "/var/lib/redis/certs",
 								},
 							},
 							LivenessProbe: &v1.Probe{
@@ -556,7 +595,13 @@ func (r *RedisConfigMap) buildConfigMapData() map[string]string {
 func (r *RedisConfigMap) getRedisConfData() string { // TODO read this from a real file
 	return `protected-mode no
 
+bind 0.0.0.0
 port 6379
+tls-port 6380
+tls-cert-file /var/lib/redis/certs/redis-server.crt
+tls-key-file /var/lib/redis/certs/redis-server.key
+tls-ca-cert-file /var/lib/redis/certs/ca.crt
+tls-auth-clients yes
 
 timeout 0
 tcp-keepalive 300

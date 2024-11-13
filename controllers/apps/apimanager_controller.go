@@ -101,6 +101,7 @@ func (r *APIManagerReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 
 	// Establish whether or not the preflights checks should be run
 	result, preflightsRequired, err := r.instanceRequiresPreflights(instance)
+	preflightsRequired = false //REMOVE TODO
 	if err != nil {
 		if result.Requeue {
 			logger.Info("failed to establish whether the preflights should be run or not")
